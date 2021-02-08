@@ -23,6 +23,7 @@ Endpoint to visit token pool - https://endpointapp.herokuapp.com/view/pool/
 
     https://endpointapp.herokuapp.com/view/token/       POST request.
 
+
 2. Endpoint to assign unique token. On hitting this endpoint. 
     
     https://endpointapp.herokuapp.com/view/assign/      POST request - 
@@ -30,5 +31,58 @@ Endpoint to visit token pool - https://endpointapp.herokuapp.com/view/pool/
     Json - 
             {"name" : "youtube", "password" : "123"}  / User details
 
+
 3. Endpoint to unblock the token in the pool.
+
+    https://endpointapp.herokuapp.com/view/all/         PUT request - 
+
+    Json - 
+            {"token" : "token value"}
+
+
+4. Endpoint to delete the token in the pool. 
+
+    https://endpointapp.herokuapp.com/view/token/       PUT request -
+    
+    Json - 
+            {"token" : "token value"} 
+
+
+5. Endpoint to keep the tokens alive.
+
+    https://endpointapp.herokuapp.com/view/all/         POST request - 
+
+    Json - 
+            {"token" : "token value"}
+
  
+Important Note - 
+
+        If we delete a user, associated token will be free and it will be ready to serve another user. 
+
+        If we delete a token, associated user(if any), will also delete from database.
+
+        Urls - 
+
+                Get all users - 
+
+                        https://endpointapp.herokuapp.com/view/user/        GET request.
+
+
+                Get specific user - 
+
+                        https://endpointapp.herokuapp.com/view/user/        POST Rquest - 
+                                            
+                        Json - 
+                                {"name" : "youtube", "password" : "123"}  / User details
+
+
+                Delete a specific user - 
+
+                        https://endpointapp.herokuapp.com/view/user/        PUT Rquest - 
+                                            
+                        Json - 
+                                {"name" : "youtube", "password" : "123"}  / User details
+
+
+                                
