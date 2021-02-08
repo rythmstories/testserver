@@ -91,30 +91,27 @@ def createtoken(request):										# func to create token
 			Userdetails.objects.all().delete()			
 			data = Tokendetails.objects.values()
 			if data:
-				# livethetoken()
 				return Response({'note' : 'All tokens should be deleted but some present'})
 			else:
-				# livethetoken()
 				return Response({'note' : 'All tokens deleted.'})
 
+# Json for PUT request
 # {"token": "04d159ecf3ee7cc69f92fec8f2218efdccc9e8ad"}		
 # {"token": "28f19a493ccaa8e93b727b3e7ab68e412ff9fd79"}	
 
 
 @api_view(['GET', 'POST'])
-def getalltoken(request):						# func to live the token
+def getalltoken(request):							# func to live the token
 	if request.method == 'GET':
 		livethetoken()
 		data = Tokendetails.objects.values("id", "token", "lasttime", "statestatus")
 		if data:
 			new = {'token' : data, 'note' : 'To get token information in detail, please click POST button.'}
-			# livethetoken()
 			return Response(new)
 		else:
-			# livethetoken()
 			return Response({'note' : 'No token is available. Please create token to fetch information.'})
 			
-	elif request.method == 'POST':									# this will give individual detail of a token and will update time ie live - state
+	elif request.method == 'POST':					# this will give individual detail of a token and will update time ie live - state
 		if 'token' in  request.data:
 			token_value = request.data['token']
 			token_data = Tokendetails.objects.filter(token = token_value).values("lasttime")
@@ -134,40 +131,36 @@ def getalltoken(request):						# func to live the token
 		else:
 			return Response({'note' : 'Please enter token data.'})
 
+# Json for POST request
 # {"token": "04d159ecf3ee7cc69f92fec8f2218efdccc9e8ad"}		
 # {"token": "28f19a493ccaa8e93b727b3e7ab68e412ff9fd79"}	
 
 
 @api_view(['GET'])
-def tokenpool(request):
+def tokenpool(request):								# func to see token pool ie all tokens whether free or blocked
 
 	if request.method == 'GET':
 		livethetoken()
 		data = Tokendetails.objects.values("id", "token", "lasttime", "statestatus")
 		if data:
-			# livethetoken()
 			return Response(data)
 		else:
-			# livethetoken()
 			return Response({'note' : 'No token is available. Please create token to fetch information.'})
-
 
 
 
 @api_view(['GET', 'POST', 'PUT'])
 def assigntoken(request):
-	if request.method == 'GET':
+	if request.method == 'GET':						# To see only free tokens
 		livethetoken()
 		data = Tokendetails.objects.filter(statestatus = 'free').values("id", "token", "lasttime", "statestatus")
 		if data:
-			# livethetoken()
 			return Response(data)
 		else:
-			# livethetoken()
 			return Response({'note' : 'No token is available. Please create token to fetch information.'})
 
 
-	elif request.method == 'POST':				# use for assigning token to a user
+	elif request.method == 'POST':					# use for assigning free token to a user
 		livethetoken()
 		try:
 			username = request.data['name']
@@ -175,14 +168,13 @@ def assigntoken(request):
 		except:
 			return Response({'note' : 'Please enter correct username & password.'})
 		chechtoken = Userdetails.objects.filter(username = username).filter(password = userpassword).values()		# credentials of user, if already exist
-		if chechtoken:			# if user already exist
+		if chechtoken:								# if user already exist
 			dict1 = {}
 			now = datetime.datetime.now()
 			Tokendetails.objects.filter(id = chechtoken[0]['tokenid_id']).update(lasttime = now)		# this is done to update the token timing ie live-state endpoint for token is hit
 			chk = Tokendetails.objects.filter(id = chechtoken[0]['tokenid_id']).values()
 			dict1['user'] = chechtoken
 			dict1['note'] = "This User credentials already exist."
-			# livethetoken()
 			return Response(dict1)
 		else:
 			data = Tokendetails.objects.filter(statestatus = 'free').values("id")
@@ -203,18 +195,19 @@ def assigntoken(request):
 				Tokendetails.objects.filter(id = tokenassigned).update(statestatus = 'blocked')
 				Tokendetails.objects.filter(id = tokenassigned).update(userpk = str(new_user[0]['id']))
 				updated_token = Tokendetails.objects.filter(id = tokenassigned).values()
-				# livethetoken()
 				return Response(new_user)
 			else:
-				# livethetoken()
 				raise Http404()
+
+
+		# Json for POST request
 
 		# {"name" : "gaurav", "password" : "123"}
 		# {"name" : "manav", "password" : "123"}
 		# {"name" : "sonia", "password" : "123"}
 		# {"name" : "mayur", "password" : "123"}
 
-	elif request.method == 'PUT':
+	elif request.method == 'PUT':					# used for unblocking a token
 		livethetoken()
 		try:
 			username = request.data['name']
@@ -238,11 +231,11 @@ def assigntoken(request):
 			main_dict = {}
 			main_dict['user'] = dict1
 			main_dict['token'] = dict2
-			# livethetoken()
 			return Response(main_dict)
 		else:
-			# livethetoken()
 			return Response({'note' : 'There is no such user in database.'})
+
+		# Json for PUT request
 
 		# {"name" : "gaurav", "password" : "123"}
 		# {"name" : "manav", "password" : "123"}
@@ -252,7 +245,7 @@ def assigntoken(request):
 
 @api_view(['GET', 'POST', 'PUT'])
 def getuserdetails(request):
-	if request.method == 'GET':
+	if request.method == 'GET':						# to get details of all users
 		livethetoken()
 		data = Userdetails.objects.values()
 		if data:
@@ -260,7 +253,7 @@ def getuserdetails(request):
 		else:
 			return Response({'note' : 'No user created.'})
 
-	elif request.method == 'POST':
+	elif request.method == 'POST':					# to get detail of a specific user
 		livethetoken()
 		try:
 			username = request.data['name']
@@ -270,18 +263,17 @@ def getuserdetails(request):
 		userdata = Userdetails.objects.filter(username = username).filter(password = userpassword).values()
 
 		if userdata:
-			# livethetoken()
 			return Response(userdata)
 		else:
-			# livethetoken()
 			return Response({'note' : 'No such user exist in database.'})
 
+		# Json for POST request
 		# {"name" : "gaurav", "password" : "123"}
 		# {"name" : "manav", "password" : "123"}
 		# {"name" : "sonia", "password" : "123"}
 		# {"name" : "mayur", "password" : "123"}
 
-	elif request.method == 'PUT':
+	elif request.method == 'PUT':					# request for deleting specific user
 		livethetoken()
 		try:
 			username = request.data['name']
@@ -292,7 +284,6 @@ def getuserdetails(request):
 		if userdata:
 			user_data = Userdetails.objects.filter(username = username).filter(password = userpassword).values()
 			dict1 = {}
-			# dict1['user'] = user_data
 			dict1['note'] = "User is delete and corresponding token is now free."
 			token_to_free = user_data[0]['tokenid_id']
 			Userdetails.objects.filter(username = username).filter(password = userpassword).delete()
@@ -300,13 +291,12 @@ def getuserdetails(request):
 			Tokendetails.objects.filter(id = token_to_free).update(userpk = '0')
 			tokendata = Tokendetails.objects.filter(id = token_to_free).values()
 			dict1['token'] = tokendata
-			# livethetoken()
 			return Response(dict1)
 		else:
-			# livethetoken()
 			return Response({'note' : 'No such user exist in database.'})
 
 
+		# Json for PUT request
 		# {"name" : "gaurav", "password" : "123"}
 		# {"name" : "manav", "password" : "123"}
 		# {"name" : "sonia", "password" : "123"}
