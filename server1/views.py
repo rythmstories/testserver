@@ -19,7 +19,7 @@ def deletetokenuser(tokenid_to_delete):
 	pass
 
 
-def livethetoken():								# func to live the tokens who are free
+def livethetoken():								# func to live the tokens (both types)
 	now = datetime.datetime.now()
 	freetoken = Tokendetails.objects.filter(statestatus = 'free').values()
 	if freetoken:
@@ -56,7 +56,7 @@ def livethetoken():								# func to live the tokens who are free
 
 
 @api_view(['GET', 'POST', 'PUT'])
-def createtoken(request):
+def createtoken(request):										# func to create token
 	if request.method == 'GET':
 		livethetoken()
 		return Response("Click POST Button to create 'TOKEN'")
@@ -75,18 +75,16 @@ def createtoken(request):
 		data = Tokendetails.objects.filter(token = tkn).values()
 		return Response(data)
 
-	elif request.method == 'PUT':						# delet token table data ie truncate table for testing
-		if request.data:
+	elif request.method == 'PUT':						# delete token table data ie truncate table for testing is request.data kept clear
+		if request.data:								# delete specific token with put request {"token" : token_value}
 			livethetoken()
 			token_to_delete = request.data['token']
 			token_to_delete_details = Tokendetails.objects.filter(token = token_to_delete).values()
 			if token_to_delete_details:
 				Userdetails.objects.filter(tokenid_id = token_to_delete_details[0]['id']).delete()
 				Tokendetails.objects.filter(token = token_to_delete).delete()
-				# livethetoken()
 				return Response({'note' : 'Token deleted'})
 			else:
-				# livethetoken()
 				return Response({'note' : 'No such token exist.'})
 		else:
 			Tokendetails.objects.all().delete()	
