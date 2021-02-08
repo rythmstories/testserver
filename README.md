@@ -13,13 +13,13 @@ Please deploy the same on Heroku and also share the postman collection of all th
 
 Solution - 
 
-github link - https://github.com/rythmstories/testserver 
+Github link - https://github.com/rythmstories/testserver 
 
-heroku link - https://endpointapp.herokuapp.com/view/pool/ 
+Heroku link - https://endpointapp.herokuapp.com/view/pool/ 
 
-Endpoint to visit token pool - https://endpointapp.herokuapp.com/view/pool/ 
+An endpoint to visit token pool - https://endpointapp.herokuapp.com/view/pool/ 
 
-1. Endpoint to generate unique token in the pool.
+1. Endpoint to generate a unique token in the pool.
 
     https://endpointapp.herokuapp.com/view/token/       POST request.
 
@@ -58,11 +58,11 @@ Endpoint to visit token pool - https://endpointapp.herokuapp.com/view/pool/
  
 Important Note - 
 
-        If we delete a user, associated token will be free and it will be ready to serve another user. 
+        If we delete a user, the associated token will be free and it will be ready to serve another user. 
 
-        If we delete a token, associated user(if any), will also delete from database.
+        If we delete a token, the associated user(if any), will also get deleted from the database.
 
-        Urls - 
+        URLs - 
 
                 Get all users - 
 
@@ -71,7 +71,7 @@ Important Note -
 
                 Get specific user - 
 
-                        https://endpointapp.herokuapp.com/view/user/        POST Rquest - 
+                        https://endpointapp.herokuapp.com/view/user/        POST Request - 
                                             
                         Json - 
                                 {"name" : "youtube", "password" : "123"}  / User details
@@ -79,7 +79,7 @@ Important Note -
 
                 Delete a specific user - 
 
-                        https://endpointapp.herokuapp.com/view/user/        PUT Rquest - 
+                        https://endpointapp.herokuapp.com/view/user/        PUT Request - 
                                             
                         Json - 
                                 {"name" : "youtube", "password" : "123"}  / User details
