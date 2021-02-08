@@ -6,9 +6,6 @@ class Tokendetails(models.Model):
 	lasttime = models.DateTimeField()						# last time this token was made live 
 	livestatus = models.CharField(max_length = 50)			# status whether it is live or dead
 	userpk = models.CharField(max_length = 50)				# user detail, pk of user it is attached
-	# date = models.DateField()
-	# time = models.TimeField()
-
 
 
 class Userdetails(models.Model):
