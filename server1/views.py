@@ -100,7 +100,7 @@ def createtoken(request):										# func to create token
 # {"token": "28f19a493ccaa8e93b727b3e7ab68e412ff9fd79"}	
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'PUT'])
 def getalltoken(request):							# func to live the token
 	if request.method == 'GET':
 		livethetoken()
@@ -131,9 +131,31 @@ def getalltoken(request):							# func to live the token
 		else:
 			return Response({'note' : 'Please enter token data.'})
 
-# Json for POST request
-# {"token": "04d159ecf3ee7cc69f92fec8f2218efdccc9e8ad"}		
-# {"token": "28f19a493ccaa8e93b727b3e7ab68e412ff9fd79"}	
+		# Json for POST request
+		# {"token": "04d159ecf3ee7cc69f92fec8f2218efdccc9e8ad"}		
+		# {"token": "28f19a493ccaa8e93b727b3e7ab68e412ff9fd79"}	
+
+	elif request.method == 'PUT':					# unblock a token
+		if 'token' in  request.data:
+			token_value = request.data['token']
+			token_data = Tokendetails.objects.filter(token = token_value).values()
+			if token_data:
+				now = datetime.datetime.now()
+				Tokendetails.objects.filter(token = token_value).update(statestatus = 'free')
+				Tokendetails.objects.filter(token = token_value).update(livestatus = 'live')
+				Tokendetails.objects.filter(token = token_value).update(lasttime = now)
+				data = Tokendetails.objects.filter(token = token_value).values()
+				dict1 = {}
+				dict1['token'] = data
+				dict1['note'] = "Token is now free"
+				return Response(dict1)
+
+			else:
+				return Response({'note' : 'No such token exist.'})
+
+		# Json for PUT request
+		# {"token": "04d159ecf3ee7cc69f92fec8f2218efdccc9e8ad"}		
+		# {"token": "28f19a493ccaa8e93b727b3e7ab68e412ff9fd79"}	
 
 
 @api_view(['GET'])
